@@ -8,7 +8,17 @@ exports.addPost = async (req, res) => {
 
   try {
     const { title, desc, tags } = req.body;
-    const images = req.files.map(file => file.filename);
+
+    let addImage = [];
+  if(req.files && req.files.length){
+
+    // console.log("ye req.files h" , req.files[0].path)
+    addImage = req.files.map((image) => {
+      // console.log("ye path " , image.path)
+      return image.path
+    })
+  }
+    // const images = req.files.map(file => file.filename);
 
     const tagArray = tags.split(',').map(tag => tag.trim());
 
@@ -24,7 +34,7 @@ exports.addPost = async (req, res) => {
     const post = new Post({
       title,
       desc,
-      images,
+      addImage,
       tags: tagIds,
     });
 
