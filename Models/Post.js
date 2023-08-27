@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { required } = require('nodemon/lib/config')
+
 const postSchema = new mongoose.Schema(
     {
         title: {
@@ -22,5 +22,12 @@ const postSchema = new mongoose.Schema(
     }
 )
 
-module.exports = mongoose.model("Post", postSchema)
+
+const Post = mongoose.model('Post', postSchema)
+
+
+
+
+module.exports = Post
+
 
