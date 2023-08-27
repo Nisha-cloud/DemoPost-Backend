@@ -11,9 +11,10 @@ const postSchema = new mongoose.Schema(
             type: String,
             required: true
         },
-        images: 
-             [String],
+        images: {
+             type: [String],
             // required: true()
+        },
         
         tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
     },

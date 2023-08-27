@@ -1,5 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const path = require('path')
 
 const cors = require('cors')
 const dotenv = require("dotenv")
@@ -10,6 +11,7 @@ const bodyParser = require("body-parser")
 app.use(bodyParser.urlencoded({ extended: true }));
 
 dotenv.config()
+app.use("/Public", express.static(path.join(__dirname, "Public")));
 
 mongoose.connect(process.env.MONGO_URL).then(() => {
     console.log('DB connection successful')

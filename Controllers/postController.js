@@ -10,16 +10,14 @@ exports.addPost = async (req, res) => {
     const { title, desc, tags } = req.body;
 
     let addImage = [];
-  if(req.files && req.files.length){
+    if (req.files && req.files.length) {
 
-    // console.log("ye req.files h" , req.files[0].path)
-    addImage = req.files.map((image) => {
-      // console.log("ye path " , image.path)
-      return image.path
-    })
-  }
-    // const images = req.files.map(file => file.filename);
-
+      addImage = req.files.map((image) => {
+        
+        return image.path;
+      });
+    }
+    console.log("addimage", addImage)
     const tagArray = tags.split(',').map(tag => tag.trim());
 
     const tagIds = [];
@@ -31,10 +29,12 @@ exports.addPost = async (req, res) => {
       }
       tagIds.push(tag._id);
     }
+    const baseUrl = 'https://demopostbackend.onrender.com'; 
+const imageUrls = addImage.map(imagePath => `${baseUrl}/${imagePath}`);
     const post = new Post({
       title,
       desc,
-      addImage,
+      images: imageUrls,
       tags: tagIds,
     });
 
@@ -86,16 +86,16 @@ exports.getPosts = async (req, res) => {
 exports.filterPostbyTags = async (req, res) => {
   try {
     const { tagName } = req.query;
-   
+
 
     const tag = await Tag.findOne({ name: tagName });
 
-   
+
     if (!tag) {
       return res.status(404).json({ error: 'Tag not found' });
     }
     const posts = await Post.find({ tags: tag._id }).populate('tags');
-    
+
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
