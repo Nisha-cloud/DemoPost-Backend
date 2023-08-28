@@ -1,6 +1,7 @@
 const express = require('express')
 const{addPost, getPosts, filterPostbyTags} = require('../Controllers/postController')
 const{upload_Post} = require('../multer')
+const cloudinary = require('cloudinary')
 
 const router = new express.Router()
 

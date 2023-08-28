@@ -1,5 +1,6 @@
 const Post = require('../Models/Post')
 const Tag = require('../Models/Tag')
+const cloudinary = require('../cloudinary')
 const { ObjectId } = require('mongodb');
 
 
@@ -8,16 +9,13 @@ exports.addPost = async (req, res) => {
 
   try {
     const { title, desc, tags } = req.body;
-
-    let addImage = [];
+    let addImageUrls = [];
     if (req.files && req.files.length) {
-
-      addImage = req.files.map((image) => {
-        
-        return image.path;
-      });
+      for (const image of req.files) {
+        const result = await cloudinary.uploader.upload(image.path); 
+        addImageUrls.push(result.secure_url); 
+      }
     }
-    console.log("addimage", addImage)
     const tagArray = tags.split(',').map(tag => tag.trim());
 
     const tagIds = [];
@@ -29,12 +27,11 @@ exports.addPost = async (req, res) => {
       }
       tagIds.push(tag._id);
     }
-    const baseUrl = 'https://demopostbackend.onrender.com'; 
-const imageUrls = addImage.map(imagePath => `${baseUrl}/${imagePath}`);
+    
     const post = new Post({
       title,
       desc,
-      images: imageUrls,
+      images: addImageUrls,
       tags: tagIds,
     });
 
